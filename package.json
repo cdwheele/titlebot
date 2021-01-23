@@ -24,6 +24,9 @@
   },
   "homepage": "https://github.com/cdwheele/titlebot#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "es6-promise": "^4.2.8",
+    "express": "^4.17.1",
+    "isomorphic-fetch": "^3.0.0",
+    "jsdom": "^16.4.0"
   }
 }
