@@ -9,37 +9,36 @@
   <div class="col-md input-form">
     <form id='url-form' method="post" action="/searchURL">
       <div id="form-div">
-        <label for="url">Search URL </label><br>
-        <input type="text" placeholder="www.example.com" name="url">
-        <input type="submit" value="Search" class="btn btn-primary">
+        <label for="url" class="sub-header">Search URL </label><br>
+        <hr>
+        <div id="form-input">
+          <input type="text" placeholder="www.example.com" name="url" class="input-field">
+          <input type="submit" value="Search" class="btn btn-primary">
+        </div>
       </div>
     </form>
+    <div id="form-output">
+      <% if (locals.title) { %>
+        <label for="title" class="title-label">Title found: </label>
+        <text id="title" ><%= title %></text>
+      <% }%>
 
-    <% if (locals.title) { %>
-      <text id="title" ><%= title %></text>
-    <% }
-    else { %>
-      <text id="title" ></text>
-    <% }%>
-
-    <% if (locals.error_msg) { %>
-      <text id="error_msg" ><%= error_msg %></text>
-    <% }
-    else { %>
-      <text id="error_msg" ></text>
-    <% }%>
+      <% if (locals.error_msg) { %>
+        <text id="error_msg" ><%= error_msg %></text>
+      <% }%>
+    </div>
   </div>
 
   <div class="col-md history">
     <% if (locals.url_history && locals.title_history) { %>
-      <table>
-        <caption id="table-caption">Request History</caption>
+      <table class="table">
+        <caption id="table-caption" class="sub-header">Request History</caption>
         <tr>
           <th>URL</th><th>Title</th>
         </tr>
 
         <!-- Loop from last element first to get reverse list order -->
-        <% for (var i = url_history.length; i > 0; i--) { %>
+        <% for (var i = url_history.length; i >= 0; i--) { %>
           <tr>
             <td><%= url_history[i] %></td>
             <td><%= title_history[i] %></td>
@@ -50,4 +49,3 @@
     <% }%>
   </div>
 </div>
-<script src="/js/frontend.js" type="text/javascript"></script>

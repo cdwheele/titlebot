@@ -6,11 +6,7 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Provide location for public files Widnows
-//app.use(express.static(__dirname + "\\public"));
-//app.set('views', __dirname + "\\public\\views");
-
-// Docker (linux)
+// Provide location for public files
 app.use(express.static(__dirname + "/public"));
 app.set('views', __dirname + "/public/views");
 app.engine('html', require('ejs').renderFile);
@@ -62,7 +58,7 @@ async function scrapeURL(url){
 *
 ****************************************************************/
 function genHistory(url, title){
-  if (url_history.length >= 10 && title_history.length >= 10){
+  if (url_history.length >= 5 && title_history.length >= 5){
     url_history.shift();
     title_history.shift();
   }
@@ -72,6 +68,13 @@ function genHistory(url, title){
   console.log(title_history);
 }
 
+/***************************************************************
+*   @param {string} title The title found at the requested URL
+*   @param {string} error The error message returned (if any)
+*
+*   Returns a json of all data to send to frontend.
+*
+****************************************************************/
 function buildJSON(title, error){
   return {
     'title' : title,
@@ -91,19 +94,15 @@ app.post('/searchURL', async function(req, res){
   console.log(http_url);
   try {
     const title = await scrapeURL(http_url);
-    //const json_title = {'title' : title, 'error_msg' :error_msg};
     genHistory(http_url, title);
     json = buildJSON(title, error_msg);
-    console.log(json);
     res.render('index.html', json);
   }
   catch(e){
     error_msg = "Invald URL entered";
     console.log("error", e);
     const title = '';
-    //const json_title = {'title' : '', 'error_msg' :error_msg};
     json = buildJSON(title, error_msg);
-    console.log(json);
     res.render('index.html', json);
   }
 });

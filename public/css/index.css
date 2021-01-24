@@ -6,17 +6,31 @@ h1 {
   color: red;
 }
 
-#form-div {
+#form-input {
+   display: flex;
+}
+
+#form-output {
+  display: flex;
+  margin-top: 2%;
 }
 
 #title {
 }
 
+
 #table-caption {
   caption-side:top;
+  /* Add custom formatting to match other header padding */
+  padding-top: 0;
+  margin-bottom: .75rem;
+}
+
+.sub-header{
   font-size: 20px;
   color: black;
   text-align: center;
+  font-weight: bold;
 }
 
 .container {
@@ -25,4 +39,14 @@ h1 {
 
 .input-form {
   text-align: center;
+}
+
+.title-label {
+  font-weight: bold;
+  margin-right: 1%;
+}
+
+.input-field {
+  margin-right: 1%;
+  width: 60%;
 }
