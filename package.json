@@ -1,0 +1,33 @@
+{
+  "name": "titlebot",
+  "version": "1.0.0",
+  "description": "Titlebot is a web application which allows the user to submit a URL using a web form, and returns to them the title of the webpage located at the URL.",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cdwheele/titlebot.git"
+  },
+  "keywords": [
+    "Web",
+    "Scraping",
+    "Javascript",
+    "HTML",
+    "CSS"
+  ],
+  "author": "Cameron Wheeler",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cdwheele/titlebot/issues"
+  },
+  "homepage": "https://github.com/cdwheele/titlebot#readme",
+  "dependencies": {
+    "ejs": "^3.1.5",
+    "es6-promise": "^4.2.8",
+    "express": "^4.17.1",
+    "isomorphic-fetch": "^3.0.0",
+    "jsdom": "^16.4.0"
+  }
+}
