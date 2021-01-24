@@ -1,13 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fetch = require('isomorphic-fetch');
-const jsdom = require("jsdom");
-const { JSDOM } = jsdom;
+const JSDOM = require("jsdom").JSDOM;
+const path = require('path');
 const app = express();
 const port = 3000;
 
 // Provide location for public files
-app.use(express.static(__dirname + '/views'));
+app.use(express.static(__dirname + "\\public"));
+app.set('views', __dirname + "\\public\\views");
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+
+//app.set('view engine', 'html');
 
 // Use bodyParser from express to parse the POST body
 app.use(
@@ -44,29 +49,63 @@ async function scrapeURL(url){
 
 function updateView(title){
   console.log(title);
+
+  /*
+  const response = await fetch('http://localhost:3000/newtitle', {
+    method: "POST",
+    body: title
+  }).then(res => {
+    console.log("Sent title to frontend");
+  });
+  */
+  const json_title = {'title' : title};
+  return json_title
+  //res.render('index.html', {'title': title});
 }
 
 async function executeSearch(url){
   const title = await scrapeURL(url);
   updateView(title);
+  return title;
 }
 
 app.get('/', function(req, res) {
   res.render('index.html');
-})
+});
 
-app.post('/searchURL', function(req, res){
+app.post('/searchURL', async function(req, res){
   const http_url = addHttp(req.body.url);
+  let error_msg = "";
   console.log(http_url);
+  /*
   try {
-     executeSearch(http_url);
+     executeSearch(http_url)
+       .then(function(title) {
+         console.log(title);
+         const json_title = {'title' : title};
+         // context has to be given again
+         return res.render(path.join(__dirname + '/index.html'), json_title);
+       })
      //scrapeURL(http_url);
   }
-  catch{
-
+  catch (e){
+    console.log(e);
   }
-})
+  */
+
+  try {
+    const title = await scrapeURL(http_url);
+    const json_title = {'title' : title, 'error_msg' :error_msg};
+    res.render('index.html', json_title);
+  }
+  catch(e){
+    error_msg = "Invald URL entered";
+    console.log("error", e);
+    const json_title = {'title' : '', 'error_msg' :error_msg};
+    res.render('index.html', json_title);
+  }
+});
 
 app.listen(port, function() {
   console.log('Titlebot application is listening at http://localhost:' + port);
-})
+});
