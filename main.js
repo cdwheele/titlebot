@@ -16,6 +16,9 @@ app.set('views', __dirname + "/public/views");
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
+// Initialize global history lists
+var title_history = [];
+var url_history = [];
 
 // Use bodyParser from express to parse the POST body
 app.use(
@@ -50,6 +53,34 @@ async function scrapeURL(url){
   return(site_dom.window.document.querySelector("title").textContent);
 }
 
+/***************************************************************
+*   @param {string} url The absolute URL requested to be scraped
+*   @param {string} title The title found at the requested URL
+*
+*   Modifies globals url_history and title_history. Max length
+*   of arrays are set to 10.
+*
+****************************************************************/
+function genHistory(url, title){
+  if (url_history.length >= 10 && title_history.length >= 10){
+    url_history.shift();
+    title_history.shift();
+  }
+  url_history.push(url);
+  title_history.push(title);
+  console.log(url_history);
+  console.log(title_history);
+}
+
+function buildJSON(title, error){
+  return {
+    'title' : title,
+    'error_msg' : error,
+    'title_history' : title_history,
+    'url_history' : url_history
+  }
+}
+
 app.get('/', function(req, res) {
   res.render('index.html');
 });
@@ -60,14 +91,20 @@ app.post('/searchURL', async function(req, res){
   console.log(http_url);
   try {
     const title = await scrapeURL(http_url);
-    const json_title = {'title' : title, 'error_msg' :error_msg};
-    res.render('index.html', json_title);
+    //const json_title = {'title' : title, 'error_msg' :error_msg};
+    genHistory(http_url, title);
+    json = buildJSON(title, error_msg);
+    console.log(json);
+    res.render('index.html', json);
   }
   catch(e){
     error_msg = "Invald URL entered";
     console.log("error", e);
-    const json_title = {'title' : '', 'error_msg' :error_msg};
-    res.render('index.html', json_title);
+    const title = '';
+    //const json_title = {'title' : '', 'error_msg' :error_msg};
+    json = buildJSON(title, error_msg);
+    console.log(json);
+    res.render('index.html', json);
   }
 });
 

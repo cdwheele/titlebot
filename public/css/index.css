@@ -4,13 +4,25 @@ h1 {
 
 #error_msg {
   color: red;
-  padding-left: 1em;
 }
 
 #form-div {
-  padding-left: 1em;
 }
 
 #title {
-  padding-left: 1em;
+}
+
+#table-caption {
+  caption-side:top;
+  font-size: 20px;
+  color: black;
+  text-align: center;
+}
+
+.container {
+  display:flex;
+}
+
+.input-form {
+  text-align: center;
 }
