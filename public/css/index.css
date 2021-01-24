@@ -4,4 +4,13 @@ h1 {
 
 #error_msg {
   color: red;
+  padding-left: 1em;
+}
+
+#form-div {
+  padding-left: 1em;
+}
+
+#title {
+  padding-left: 1em;
 }

@@ -6,9 +6,13 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Provide location for public files
-app.use(express.static(__dirname + "\\public"));
-app.set('views', __dirname + "\\public\\views");
+// Provide location for public files Widnows
+//app.use(express.static(__dirname + "\\public"));
+//app.set('views', __dirname + "\\public\\views");
+
+// Docker (linux)
+app.use(express.static(__dirname + "/public"));
+app.set('views', __dirname + "/public/views");
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
@@ -54,7 +58,6 @@ app.post('/searchURL', async function(req, res){
   const http_url = addHttp(req.body.url);
   let error_msg = "";
   console.log(http_url);
-
   try {
     const title = await scrapeURL(http_url);
     const json_title = {'title' : title, 'error_msg' :error_msg};
