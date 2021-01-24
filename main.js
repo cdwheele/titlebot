@@ -54,7 +54,7 @@ async function scrapeURL(url){
 *   @param {string} title The title found at the requested URL
 *
 *   Modifies globals url_history and title_history. Max length
-*   of arrays are set to 10.
+*   of arrays are set to 5.
 *
 ****************************************************************/
 function genHistory(url, title){
@@ -64,8 +64,6 @@ function genHistory(url, title){
   }
   url_history.push(url);
   title_history.push(title);
-  console.log(url_history);
-  console.log(title_history);
 }
 
 /***************************************************************
@@ -84,10 +82,22 @@ function buildJSON(title, error){
   }
 }
 
+/***************************************************************
+*   Handle home page request.
+*
+*   Returns index html page.
+*
+****************************************************************/
 app.get('/', function(req, res) {
   res.render('index.html');
 });
 
+/***************************************************************
+*   Handle request by user to send a URL and scrape the title.
+*
+*   Returns an html page with embedded variables.
+*
+****************************************************************/
 app.post('/searchURL', async function(req, res){
   const http_url = addHttp(req.body.url);
   let error_msg = "";
