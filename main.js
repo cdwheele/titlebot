@@ -6,16 +6,15 @@ const path = require('path');
 const app = express();
 const port = 3000;
 
-// Provide location for public files Widnows
-//app.use(express.static(__dirname + "\\public"));
-//app.set('views', __dirname + "\\public\\views");
-
-// Docker (linux)
+// Provide location for public files
 app.use(express.static(__dirname + "/public"));
 app.set('views', __dirname + "/public/views");
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
+// Initialize global history lists
+var title_history = [];
+var url_history = [];
 
 // Use bodyParser from express to parse the POST body
 app.use(
@@ -50,24 +49,71 @@ async function scrapeURL(url){
   return(site_dom.window.document.querySelector("title").textContent);
 }
 
+/***************************************************************
+*   @param {string} url The absolute URL requested to be scraped
+*   @param {string} title The title found at the requested URL
+*
+*   Modifies globals url_history and title_history. Max length
+*   of arrays are set to 5.
+*
+****************************************************************/
+function genHistory(url, title){
+  if (url_history.length >= 5 && title_history.length >= 5){
+    url_history.shift();
+    title_history.shift();
+  }
+  url_history.push(url);
+  title_history.push(title);
+}
+
+/***************************************************************
+*   @param {string} title The title found at the requested URL
+*   @param {string} error The error message returned (if any)
+*
+*   Returns a json of all data to send to frontend.
+*
+****************************************************************/
+function buildJSON(title, error){
+  return {
+    'title' : title,
+    'error_msg' : error,
+    'title_history' : title_history,
+    'url_history' : url_history
+  }
+}
+
+/***************************************************************
+*   Handle home page request.
+*
+*   Returns index html page.
+*
+****************************************************************/
 app.get('/', function(req, res) {
   res.render('index.html');
 });
 
+/***************************************************************
+*   Handle request by user to send a URL and scrape the title.
+*
+*   Returns an html page with embedded variables.
+*
+****************************************************************/
 app.post('/searchURL', async function(req, res){
   const http_url = addHttp(req.body.url);
   let error_msg = "";
   console.log(http_url);
   try {
     const title = await scrapeURL(http_url);
-    const json_title = {'title' : title, 'error_msg' :error_msg};
-    res.render('index.html', json_title);
+    genHistory(http_url, title);
+    json = buildJSON(title, error_msg);
+    res.render('index.html', json);
   }
   catch(e){
     error_msg = "Invald URL entered";
     console.log("error", e);
-    const json_title = {'title' : '', 'error_msg' :error_msg};
-    res.render('index.html', json_title);
+    const title = '';
+    json = buildJSON(title, error_msg);
+    res.render('index.html', json);
   }
 });
 
