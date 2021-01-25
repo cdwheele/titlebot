@@ -3,7 +3,7 @@ Title Bot is a web application which allows the user to submit a URL using a web
 
 # Pulling image from Dockerhub
 The docker image for this program is uploaded to dockerhub and can be downloaded and run with the command:  
-```$ docker run --rm -p 3000:3000 cdwheele/titlebot-wheeler```
+```$ docker run -p 3000:3000 cdwheele/titlebot-wheeler```
 # Building the container
 ```$ docker build -t titlebot .```  
 
